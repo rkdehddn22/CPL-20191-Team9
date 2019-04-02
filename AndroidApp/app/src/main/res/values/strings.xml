@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">BLEApp</string>
+
+    <string name="main_action_search">Scan</string>
+    <string name="main_action_search_stop">Stop Scanning</string>
+    <string name="main_action_settings">Settings</string>
+</resources>
