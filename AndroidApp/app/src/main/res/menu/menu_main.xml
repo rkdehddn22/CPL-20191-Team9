@@ -6,7 +6,7 @@
         android:id="@+id/action_main_search"
         android:icon="@drawable/ic_action_refresh"
         android:title="@string/main_action_search"
-        app:showAsAction="ifRoom|withText"/>
+        app:showAsAction="always|withText" />
 
     <!-- Settings, should always be in the overflow -->
     <item android:id="@+id/action_main_settings"

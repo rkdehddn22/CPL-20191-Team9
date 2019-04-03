@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BLEApp</string>
+    <string name="main_action_search">검색</string>
+    <string name="main_action_search_stop">검색 중단</string>
+    <string name="main_action_settings">설정</string>
+</resources>
