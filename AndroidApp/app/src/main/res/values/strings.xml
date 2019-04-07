@@ -4,4 +4,10 @@
     <string name="main_action_search">Scan</string>
     <string name="main_action_search_stop">Stop Scanning</string>
     <string name="main_action_settings">Settings</string>
+    <string name="main_null_device_name">Unknown Device</string>
+    <string name="main_device_not_found">Device not found</string>
+
+    <string name="device_invalid_launch">Device not valid!</string>
+    <string name="device_connecting">Connecting…</string>
+    <string name="device_disconnected">Disconnected from the device</string>
 </resources>

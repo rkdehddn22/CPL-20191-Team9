@@ -19,9 +19,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,6 +64,16 @@ public class MainActivity extends AppCompatActivity {
         lvwDevices = findViewById(R.id.lvw_main_devices);
         adapter = new DeviceListAdapter(this);
         lvwDevices.setAdapter(adapter);
+
+        lvwDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                BluetoothDevice device = adapter.getItem(position);
+                Intent intent = new Intent(MainActivity.this, DeviceActivity.class);
+                intent.putExtra("btdevice", device);
+                startActivity(intent);
+            }
+        });
 
         // this callback will be called when a new BLE device is found
         scanCallback = new BluetoothAdapter.LeScanCallback() {
@@ -190,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public Object getItem(int position) {
+        public BluetoothDevice getItem(int position) {
             return devices.get(position);
         }
 
@@ -216,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
                 holder = (ListItemViewHolder)convertView.getTag();
             }
 
-            holder.tvwName.setText((devices.get(position).getName() == null) ? "(null)" : devices.get(position).getName());
+            holder.tvwName.setText((devices.get(position).getName() == null) ? getString(R.string.main_null_device_name) : devices.get(position).getName());
             holder.tvwDesc.setText(devices.get(position).getAddress());
 
             return convertView;
