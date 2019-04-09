@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 BluetoothDevice device = adapter.getItem(position);
                 Intent intent = new Intent(MainActivity.this, DeviceActivity.class);
                 intent.putExtra("btdevice", device);
+                stopBleSearch();
                 startActivity(intent);
             }
         });
