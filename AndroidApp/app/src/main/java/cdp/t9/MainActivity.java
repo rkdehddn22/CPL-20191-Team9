@@ -4,7 +4,6 @@ import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
-import android.bluetooth.le.ScanCallback;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,19 +14,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,11 +32,14 @@ public class MainActivity extends AppCompatActivity {
     private final int REQUEST_ENABLE_BT = 1;
     private final int REQUEST_PERM = 2;
 
+    private final int ADAPTER_NOTIFY_INTERVAL = 100;
+
     private Handler handler;
     private BluetoothManager bluetoothManager;
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothAdapter.LeScanCallback scanCallback;
     private Runnable rStopScan;
+    private Runnable rAdapterNotify;
 
     private ListView lvwDevices;
     private DeviceListAdapter adapter;
@@ -61,6 +57,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 stopBleSearch();
+            }
+        };
+
+        rAdapterNotify = new Runnable() {
+            @Override
+            public void run() {
+                adapter.notifyDataSetChanged();
+                if (isScanning) handler.postDelayed(rAdapterNotify, ADAPTER_NOTIFY_INTERVAL);
             }
         };
 
@@ -91,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     adapter.devices.set(deviceIdx, device);
                 }
-                adapter.notifyDataSetChanged();
+                //adapter.notifyDataSetChanged();
             }
         };
 
@@ -187,10 +191,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private int getDeviceIdxInList(List<BluetoothDevice> list, BluetoothDevice device) {
-        for (BluetoothDevice d : list) {
-            if (d.getAddress().equals(device.getAddress())) return list.indexOf(d);
-        }
-        return -1;
+        return list.indexOf(device);
     }
 
     private void startBleSearch() {
@@ -201,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
 
         // search for 10 seconds and stop
         handler.postDelayed(rStopScan, 10000);
+        handler.postDelayed(rAdapterNotify, ADAPTER_NOTIFY_INTERVAL);
         bluetoothAdapter.startLeScan(scanCallback);
         isScanning = true;
 
@@ -211,6 +213,8 @@ public class MainActivity extends AppCompatActivity {
         if (!isScanning) return;
 
         handler.removeCallbacks(rStopScan);
+        handler.removeCallbacks(rAdapterNotify);
+        adapter.notifyDataSetChanged();
         bluetoothAdapter.stopLeScan(scanCallback);
         isScanning = false;
 
