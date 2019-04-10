@@ -128,6 +128,7 @@ public class BluetoothLeService extends Service {
             Log.w(TAG, "Read ===========================");
 
             if (status == BluetoothGatt.GATT_SUCCESS) {
+                Log.w(TAG, "Characteristic Read from " + characteristic.getUuid().toString() + ": " + Util.bytesToHex(characteristic.getValue()));
                 broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
             }
         }
@@ -139,6 +140,7 @@ public class BluetoothLeService extends Service {
 
             Log.w(TAG, "onCharacteristicChanged ===========================");
 
+            Log.w(TAG, "Characteristic Changed from " + characteristic.getUuid().toString() + ": " + Util.bytesToHex(characteristic.getValue()));
             broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
         }
     };

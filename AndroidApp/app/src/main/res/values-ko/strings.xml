@@ -20,6 +20,8 @@
     <string name="device_data">데이터: %s</string>
     <string name="device_data_null">null</string>
     <string name="device_send">전송</string>
+    <string name="device_send_no_message">전송할 데이터를 입력해주세요!</string>
+    <string name="device_send_too_long_message">데이터는 1회 20글자까지만 보낼 수 있습니다</string>
 
     <string name="unknown_device">알 수 없는 장치</string>
     <string name="unknown_characteristic">알 수 없는 특성</string>

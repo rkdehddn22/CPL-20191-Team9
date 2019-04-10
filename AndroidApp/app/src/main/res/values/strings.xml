@@ -19,6 +19,8 @@
     <string name="device_data">Data: %s</string>
     <string name="device_data_null">null</string>
     <string name="device_send">Send</string>
+    <string name="device_send_no_message">No message to send!</string>
+    <string name="device_send_too_long_message">Message is too long! (20 bytes maximum)</string>
 
     <string name="unknown_device">Unknown device</string>
     <string name="unknown_characteristic">Unknown characteristic</string>

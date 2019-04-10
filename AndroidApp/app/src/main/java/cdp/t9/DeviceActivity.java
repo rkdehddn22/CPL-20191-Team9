@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -84,6 +85,7 @@ public class DeviceActivity extends AppCompatActivity {
                             //final BluetoothGattCharacteristic characteristic = gattCharacteristics.get(1).get(1);
                             bleService.setCharacteristicNotification(characteristic, true);
                         } catch (Exception e) {
+                            e.printStackTrace();
                             bleService.disconnect();
                             Toast.makeText(DeviceActivity.this, R.string.device_status_invalid_device, Toast.LENGTH_SHORT).show();
                         }
@@ -97,15 +99,21 @@ public class DeviceActivity extends AppCompatActivity {
                     Log.d(TAG, "======= Init Setting Data ");
                     updateCommandState("Init Data");
 
-
                     Handler mHandler = new Handler();
                     mHandler.postDelayed(new Runnable() {
 
                         @Override
                         public void run() {
                             // notification enable
-                            final BluetoothGattCharacteristic characteristic = gattCharacteristics.get(3).get(1);
-                            bleService.setCharacteristicNotification(characteristic, true);
+                            try {
+                                final BluetoothGattCharacteristic characteristic = gattCharacteristics.get(3).get(1);
+                                //final BluetoothGattCharacteristic characteristic = gattCharacteristics.get(1).get(1);
+                                bleService.setCharacteristicNotification(characteristic, true);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                bleService.disconnect();
+                                Toast.makeText(DeviceActivity.this, R.string.device_status_invalid_device, Toast.LENGTH_SHORT).show();
+                            }
                         }
 
                     }, 1000);
@@ -184,6 +192,30 @@ public class DeviceActivity extends AppCompatActivity {
         updateConnectionState(R.string.device_disconnected);
         displayData(null);
 
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!connected) return;
+
+                if (edtSend.length() < 1) {
+                    Toast.makeText(DeviceActivity.this, R.string.device_send_no_message, Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (edtSend.length() > 20) {
+                    Toast.makeText(DeviceActivity.this, R.string.device_send_too_long_message, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                sendData();
+
+                StringBuilder sb = new StringBuilder();
+                sb.append(tvwText.getText().toString())
+                        .append("Tx: ")
+                        .append(edtSend.getText().toString())
+                        .append("\r\n");
+                tvwText.setText(sb);
+            }
+        });
+
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, serviceConnection, BIND_AUTO_CREATE);
 
@@ -206,6 +238,13 @@ public class DeviceActivity extends AppCompatActivity {
             final boolean result = bleService.connect(device.getAddress());
             Log.d(TAG, "Connect request result=" + result);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(serviceConnection);
+        bleService = null;
     }
 
     private static IntentFilter makeGattUpdateIntentFilter() {
@@ -302,5 +341,22 @@ public class DeviceActivity extends AppCompatActivity {
 
 
         Log.d(TAG, "service read ok ");
+    }
+
+
+    private void sendData(){
+        if(gattCharacteristics != null) {
+            try {
+                final BluetoothGattCharacteristic characteristic = gattCharacteristics.get(3).get(0);
+                bleService.writeCharacteristics(characteristic, edtSend.getText().toString());
+                updateCommandState("Write Data");
+                displayData(edtSend.getText().toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+                bleService.disconnect();
+                Toast.makeText(DeviceActivity.this, R.string.device_status_invalid_device, Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
     }
 }
