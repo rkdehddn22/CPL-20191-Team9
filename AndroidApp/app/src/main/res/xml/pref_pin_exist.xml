@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:key="pin_clear"
+        android:title="@string/settings_security_pin_clear" />
+    <Preference
+        android:key="pin_change"
+        android:title="@string/settings_security_pin_change" />
+</PreferenceScreen>

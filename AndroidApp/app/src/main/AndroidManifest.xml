@@ -23,7 +23,7 @@
         <service
             android:name=".BluetoothLeService"
             android:enabled="true"
-            android:exported="false"></service>
+            android:exported="false" />
 
         <activity android:name=".MainActivity" />
         <activity
@@ -36,6 +36,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".DeviceActivity" />
+        <activity android:name=".PinActivity" />
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".SettingsPinActivity"></activity>
     </application>
 
 </manifest>
