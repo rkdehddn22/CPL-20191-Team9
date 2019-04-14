@@ -36,7 +36,7 @@ public class GattAttributes {
     public static String FBL770_INIT_SETTING = "0000ffc1-0000-1000-8000-00805f9b34fb";
 
     public static String FBL770_SPP_WRITE = "0000fff1-0000-1000-8000-00805f9b34fb";
-    public static String FBL770_SPP_NOTIFY = "0000fff2-0000-1000-8000-00805f9b34fb";
+    public static String FBL770_SPP_NOTIFY = "0000fff1-0000-1000-8000-00805f9b34fb";
 
     static {
         // Sample Services.

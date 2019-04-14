@@ -17,9 +17,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +50,10 @@ public class DeviceActivity extends AppCompatActivity {
     TextView tvwText;
     EditText edtSend;
     Button btnSend;
+
+    ListView lvwSensor;
+    SensorAdapter adapter;
+    ArrayList<Sensor> sensors;
 
     boolean connected;
 
@@ -81,7 +89,7 @@ public class DeviceActivity extends AppCompatActivity {
                     public void run() {
                         // notification enable
                         try {
-                            final BluetoothGattCharacteristic characteristic = gattCharacteristics.get(3).get(1);
+                            final BluetoothGattCharacteristic characteristic = gattCharacteristics.get(2).get(0);
                             //final BluetoothGattCharacteristic characteristic = gattCharacteristics.get(1).get(1);
                             bleService.setCharacteristicNotification(characteristic, true);
                         } catch (Exception e) {
@@ -95,6 +103,7 @@ public class DeviceActivity extends AppCompatActivity {
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
                 byte[] sendByte = intent.getByteArrayExtra("init");
 
+
                 if ((sendByte[0] == 0x55) && (sendByte[1] == 0x33)) {
                     Log.d(TAG, "======= Init Setting Data ");
                     updateCommandState("Init Data");
@@ -106,7 +115,7 @@ public class DeviceActivity extends AppCompatActivity {
                         public void run() {
                             // notification enable
                             try {
-                                final BluetoothGattCharacteristic characteristic = gattCharacteristics.get(3).get(1);
+                                final BluetoothGattCharacteristic characteristic = gattCharacteristics.get(2).get(0);
                                 //final BluetoothGattCharacteristic characteristic = gattCharacteristics.get(1).get(1);
                                 bleService.setCharacteristicNotification(characteristic, true);
                             } catch (Exception e) {
@@ -127,7 +136,7 @@ public class DeviceActivity extends AppCompatActivity {
 
                     String s = "";
                     s = tvwText.getText().toString();
-                    s += "Rx: " + Util.unHex(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
+                    s += "Rx: " + intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
                     tvwText.setMovementMethod(new ScrollingMovementMethod());
                     tvwText.setText(s + "\r\n");
 
@@ -215,6 +224,11 @@ public class DeviceActivity extends AppCompatActivity {
                 tvwText.setText(sb);
             }
         });
+
+        lvwSensor = findViewById(R.id.lvw_device_sensor);
+        sensors = new ArrayList<>();
+        adapter = new SensorAdapter(sensors);
+        lvwSensor.setAdapter(adapter);
 
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, serviceConnection, BIND_AUTO_CREATE);
@@ -347,7 +361,7 @@ public class DeviceActivity extends AppCompatActivity {
     private void sendData(){
         if(gattCharacteristics != null) {
             try {
-                final BluetoothGattCharacteristic characteristic = gattCharacteristics.get(3).get(0);
+                final BluetoothGattCharacteristic characteristic = gattCharacteristics.get(2).get(0);
                 bleService.writeCharacteristics(characteristic, edtSend.getText().toString());
                 updateCommandState("Write Data");
                 displayData(edtSend.getText().toString());
@@ -357,6 +371,64 @@ public class DeviceActivity extends AppCompatActivity {
                 Toast.makeText(DeviceActivity.this, R.string.device_status_invalid_device, Toast.LENGTH_SHORT).show();
                 return;
             }
+        }
+    }
+
+    private class Sensor {
+        int type;
+        int id;
+        int value;
+    }
+
+    private class SensorAdapter extends BaseAdapter {
+        ArrayList<Sensor> sensors;
+
+        public SensorAdapter(ArrayList<Sensor> sensors) {
+            this.sensors = sensors;
+        }
+
+        @Override
+        public int getCount() {
+            return sensors.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ListItemViewHolder holder;
+
+            if (convertView == null) {
+                LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+                convertView = inflater.inflate(R.layout.list_sensor, parent, false);
+
+                holder = new ListItemViewHolder();
+                holder.tvwN = convertView.findViewById(R.id.tvw_sensor_n);
+                holder.tvwId = convertView.findViewById(R.id.tvw_sensor_id);
+                holder.tvwVal = convertView.findViewById(R.id.tvw_sensor_val);
+
+                convertView.setTag(holder);
+            } else {
+                holder = (ListItemViewHolder)convertView.getTag();
+            }
+
+            holder.tvwN.setText(position);
+
+            return convertView;
+        }
+
+        private class ListItemViewHolder {
+            TextView tvwN;
+            TextView tvwId;
+            TextView tvwVal;
         }
     }
 }

@@ -26,6 +26,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        /*
         // initialize preference
         sp = getSharedPreferences("cdp.t9.settings", Activity.MODE_PRIVATE);
 
@@ -49,6 +50,8 @@ public class SplashActivity extends AppCompatActivity {
             }
         };
 
+        */
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[] {
                             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -56,7 +59,9 @@ public class SplashActivity extends AppCompatActivity {
                     },
                     REQUEST_PERM);
         } else {
-            handler.postDelayed(rStart, 500);
+            //handler.postDelayed(rStart, 500);
+            startActivity(new Intent(SplashActivity.this, MainActivity.class));
+            finish();
         }
     }
 
@@ -64,7 +69,9 @@ public class SplashActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_PERM) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                handler.postDelayed(rStart, 500);
+                //handler.postDelayed(rStart, 500);
+                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                finish();
             } else {
                 finish();
             }

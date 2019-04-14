@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -77,8 +78,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BluetoothDevice device = adapter.getItem(position);
-                Intent intent = new Intent(MainActivity.this, DeviceActivity.class);
-                intent.putExtra("btdevice", device);
+                Intent targetIntent = new Intent(MainActivity.this, DeviceActivity.class);
+                targetIntent.putExtra("btdevice", device);
+                Intent intent = new Intent(MainActivity.this, PinActivity.class);
+                intent.putExtra("activity_to_launch", targetIntent);
+                String s = device.getAddress().replace(":", "").substring(6, 12);
+                intent.putExtra("target_addr", s);
                 stopBleSearch();
                 startActivity(intent);
             }
@@ -131,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 else startBleSearch();
                 return true;
             case R.id.action_main_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
+                //startActivity(new Intent(this, SettingsActivity.class));
                 return true;
         }
         return false;

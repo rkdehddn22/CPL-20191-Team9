@@ -27,7 +27,7 @@ public class SettingsPinActivity extends AppCompatPreferenceActivity {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     Intent intent = new Intent(SettingsPinActivity.this, PinActivity.class);
-                    intent.putExtra("mode", PinActivity.PIN_MODE_CREATE);
+                    //intent.putExtra("mode", PinActivity.PIN_MODE_CREATE);
                     startActivity(intent);
                     finish();
                     return true;
@@ -49,7 +49,7 @@ public class SettingsPinActivity extends AppCompatPreferenceActivity {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     Intent intent = new Intent(SettingsPinActivity.this, PinActivity.class);
-                    intent.putExtra("mode", PinActivity.PIN_MODE_CREATE);
+                    //intent.putExtra("mode", PinActivity.PIN_MODE_CREATE);
                     startActivity(intent);
                     finish();
                     return true;

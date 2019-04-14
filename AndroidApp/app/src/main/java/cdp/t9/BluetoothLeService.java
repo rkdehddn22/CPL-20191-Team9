@@ -63,6 +63,8 @@ public class BluetoothLeService extends Service {
             "cdp.t9.ACTION_DATA_AVAILABLE";
     public final static String EXTRA_DATA =
             "cdp.t9.EXTRA_DATA";
+    public final static String EXTRA_DATA_BYTES =
+            "cdp.t9.EXTRA_DATA_BYTES";
 
     public final static UUID UUID_HEART_RATE_MEASUREMENT =
             UUID.fromString(GattAttributes.HEART_RATE_MEASUREMENT);
@@ -268,10 +270,9 @@ public class BluetoothLeService extends Service {
             sendCnt = 2;
 
             // For all other profiles, writes the data formatted in HEX.
-            final byte[] data = characteristic.getValue();
+            final byte[] data = Util.inverseBytes(characteristic.getValue());
             if (data != null && data.length > 0) {
                 final StringBuilder stringBuilder = new StringBuilder(data.length);
-
 
                 for(byte byteChar : data){
                     stringBuilder.append(String.format("%02X ", byteChar));
@@ -279,6 +280,7 @@ public class BluetoothLeService extends Service {
                 }
                 intent.putExtra("init", sendByte);
                 intent.putExtra(EXTRA_DATA, stringBuilder.toString());
+                intent.putExtra(EXTRA_DATA_BYTES, data);
             }
         } else {
             // For all other profiles, writes the data formatted in HEX.

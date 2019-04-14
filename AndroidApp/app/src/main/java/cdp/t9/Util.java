@@ -34,6 +34,15 @@ public class Util {
         return str;
     }
 
+    public static byte[] inverseBytes(byte[] value) {
+        byte[] ret = new byte[value.length];
+        for (int i = 1; i < value.length; i += 2) {
+            ret[i - 1] = value[i];
+            ret[i] = value[i - 1];
+        }
+        return ret;
+    }
+
     public final static UUID uuidGenericAccess = UUID.fromString("00001801-0000-1000-8000-00805f9b34fb");
     public final static UUID uuidGenericAttribute = UUID.fromString("00001801-0000-1000-8000-00805f9b34fb");
 }

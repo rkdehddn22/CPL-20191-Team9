@@ -33,7 +33,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 } else {
                     Intent passIntent = new Intent(SettingsActivity.this, SettingsPinActivity.class);
                     Intent intent = new Intent(SettingsActivity.this, PinActivity.class);
-                    intent.putExtra("mode", PinActivity.PIN_MODE_INPUT);
+                    //intent.putExtra("mode", PinActivity.PIN_MODE_INPUT);
                     intent.putExtra("activity_to_launch", passIntent);
                     startActivity(intent);
                 }
