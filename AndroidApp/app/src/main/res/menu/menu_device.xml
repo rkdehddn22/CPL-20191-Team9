@@ -3,16 +3,19 @@
 
     <!-- "Mark Favorite", should appear as action button if possible -->
     <item
-        android:id="@+id/action_main_search"
-        android:icon="@drawable/ic_action_refresh"
+        android:id="@+id/action_device_add"
+        android:icon="@drawable/ic_action_add"
         android:title="@string/main_action_search"
         app:showAsAction="always|withText" />
 
     <!-- Settings, should always be in the overflow -->
     <item
-        android:id="@+id/action_main_settings"
-        android:title="@string/main_action_settings"
-        android:visible="false"
+        android:id="@+id/action_device_load_profile"
+        android:title="@string/device_action_load_profile"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_device_save_profile"
+        android:title="@string/device_action_save_profile"
         app:showAsAction="never" />
 
 </menu>

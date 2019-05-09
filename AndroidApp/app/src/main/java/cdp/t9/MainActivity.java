@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 String s = device.getAddress().replace(":", "").substring(6, 12);
                 intent.putExtra("target_addr", s);
                 stopBleSearch();
-                startActivity(intent);
+                startActivity(targetIntent);
             }
         });
 
